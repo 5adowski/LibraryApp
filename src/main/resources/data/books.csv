@@ -1,0 +1,4 @@
+Book(id=e3bb6562-3d8b-4cb4-a1cf-821462579060, title=Tytuł, genre=ACTION, releaseDate=2001-01-01, isAvailable=true)
+Book(id=94dc69c8-4700-4f17-b594-f084e0932ab5, title=Tytuł, genre=ACTION, releaseDate=2001-01-01, isAvailable=true)
+Book(id=ef97e9c0-752e-4fb0-b279-09ea189d600f, title=Tytuł, genre=ACTION, releaseDate=2001-01-01, isAvailable=true)
+Book(id=6738a59c-cb69-4652-a83c-c23257a62257, title=eeek, genre=ACTION, releaseDate=2001-01-01, isAvailable=true)
