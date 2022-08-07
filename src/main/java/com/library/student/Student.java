@@ -12,7 +12,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private List<UUID> idsOfBooksRented;
+    private List<UUID> idsBooksRented;
 
 
 }

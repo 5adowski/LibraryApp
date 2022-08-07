@@ -14,14 +14,14 @@ public class Book {
     private Enum<Genre> genre;
     private LocalDate releaseDate;
     private boolean isAvailable;
-    private UUID idOfStudent;
+    private UUID idStudent;
 
     public Book(){
-        this.isAvailable = idOfStudent == null;
+        this.isAvailable = idStudent == null;
     }
-
-    public void setIdOfStudent(UUID idOfStudent) {
-        this.idOfStudent = idOfStudent;
-        if(idOfStudent != null) this.isAvailable = false;
-    }
+//
+//    public void setIdStudent(UUID idOfStudent) {
+//        this.idStudent = idOfStudent;
+//        if(idOfStudent != null) this.isAvailable = false;
+//    }
 }

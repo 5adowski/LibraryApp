@@ -3,11 +3,10 @@ package com.library.main;
 import com.library.book.Book;
 import com.library.book.BookRepository;
 import com.library.book.genre.Genre;
-import com.library.file.management.FileManagement;
+import com.library.file.management.BooksFile;
+import com.library.file.management.StudentsFile;
 import com.library.student.Student;
-import com.library.student.StudentRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -15,18 +14,17 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         while (true) {
-            String studentFilePath = "C:\\Java\\intelliJ\\projects\\LibraryTTPSC\\src\\main\\resources\\data\\students.csv";
-            String bookFilePath = "C:\\Java\\intelliJ\\projects\\LibraryTTPSC\\src\\main\\resources\\data\\books.csv";
-            List<Book> bookList = FileManagement.getBooksFromFile(bookFilePath);
-            List<Student> studentList = FileManagement.getStudentsFromFile(studentFilePath);
+            List<Book> books = BooksFile.getBooks();
+            List<Student> students = StudentsFile.getStudents();
             Scanner scan = new Scanner(System.in);
             System.out.println("Pick option:");
             System.out.println("1. Add new student");
-            System.out.println("2. List available books");
-            System.out.println("3. List books by title");
-            System.out.println("4. Rent a book");
-            System.out.println("5. Return a book");
-            System.out.println("6. Save files");
+            System.out.println("2. Add new book");
+            System.out.println("3. List available books");
+            System.out.println("4. List books by title");
+            System.out.println("5. Rent a book");
+            System.out.println("6. Return a book");
+            System.out.println("7. Save files");
             System.out.println("0. Close program");
             int option = scan.nextInt();
             if (option == 1) {
@@ -42,51 +40,10 @@ public class Main {
                 System.out.println("Enter year of birth:");
                 int year = scan.nextInt();
                 student.setBirthDate(LocalDate.of(year, month, day));
-                FileManagement.writeStudentToFile(student, studentFilePath);
+                StudentsFile.writeStudent(student);
                 System.out.println("Student added!");
             }
             if (option == 2) {
-                bookList.stream().filter(Book::isAvailable).forEach(System.out::println);
-            }
-            if (option == 3) {
-                List<String> titleList = new ArrayList<>();
-                for (Book book : bookList) titleList.add(book.getTitle());
-                titleList.sort(String::compareToIgnoreCase);
-                System.out.println(titleList);
-            }
-            if (option == 4) {
-
-                System.out.println(bookList);
-                System.out.println("Type ID of book u want to rent:");
-                String idOfBookPicked = scan.next();
-                Book book = BookRepository.getById(idOfBookPicked);
-
-                System.out.println(studentList);
-                System.out.println("Type ID of the student who is renting a book:");
-                String idOfStudentPicked = scan.next();
-                Student student = StudentRepository.getById(idOfStudentPicked);
-
-                book.setIdOfStudent(UUID.fromString(idOfStudentPicked));
-                bookList.stream()
-                        .filter(b -> UUID.fromString(idOfBookPicked).equals(book.getId()))
-                        .forEach(b -> b.setIdOfStudent(UUID.fromString(idOfStudentPicked)));
-                FileManagement.writeBookToFile(book, bookFilePath);
-
-                List<UUID> idsOfBooksRented = student.getIdsOfBooksRented();
-                if (idsOfBooksRented == null) idsOfBooksRented = new ArrayList<>();
-                idsOfBooksRented.add(UUID.fromString(idOfBookPicked));
-                student.setIdsOfBooksRented(idsOfBooksRented);
-                List<UUID> finalIdsOfBooksRented = idsOfBooksRented;
-                studentList.stream()
-                        .filter(s -> s.getId().equals(student.getId()))
-                                .forEach(s->s.setIdsOfBooksRented(finalIdsOfBooksRented));
-                FileManagement.writeStudentToFile(student, studentFilePath);
-            }
-            if (option == 0) {
-                break;
-            }
-            if (option == 7) {
-                System.out.println("Adding new book");
                 Book book = new Book();
                 System.out.println("Enter book title:");
                 scan.nextLine();
@@ -103,13 +60,56 @@ public class Main {
                 System.out.println("Enter year of release:");
                 int year = scan.nextInt();
                 book.setReleaseDate(LocalDate.of(year, month, day));
-                bookList = FileManagement.getBooksFromFile(bookFilePath);
-                bookList.add(book);
-                FileManagement.writeBookToFile(book, bookFilePath);
+                BooksFile.writeBook(book);
                 System.out.println("Book added");
             }
-            if(option==8) {
-                FileManagement.writeBookToFile(new Book(), bookFilePath);
+            if (option == 3) {
+                if(!(BookRepository.getAvaiableBooks(books).isEmpty() || BookRepository.getAvaiableBooks(books)==null)) {
+                    System.out.println(BookRepository.getAvaiableBooks(books));
+                } else {
+                    System.out.println("No available books");
+                }
+            }
+            if (option == 4) {
+                System.out.println(BookRepository.getBooksSortedByTitle(books));
+            }
+            if (option == 5) {
+                if(!(BookRepository.getAvaiableBooks(books).isEmpty() || BookRepository.getAvaiableBooks(books)==null)) {
+                    System.out.println(BookRepository.getAvaiableBooks(books));
+                    System.out.println("Type ID of book u want to rent:");
+                    UUID idBook = UUID.fromString(scan.next());
+
+                    System.out.println(students);
+                    System.out.println("Type ID of the student who is renting a book:");
+                    UUID idStudent = UUID.fromString(scan.next());
+
+                    books.stream().filter(b -> b.getId().equals(idBook))
+                            .forEach(b -> {
+                                b.setAvailable(false);
+                                b.setIdStudent(idStudent);
+                            });
+                    Book book = books.stream().filter(b -> b.getId().equals(idBook)).findAny().get();
+                    BooksFile.writeBook(book);
+
+                    Student student = students.stream().filter(s -> s.getId().equals(idStudent)).findAny().get();
+                    System.out.println(student);
+                    List<UUID> idsBooksRented;
+                    if (student.getIdsBooksRented() != null) {
+                        idsBooksRented = student.getIdsBooksRented();
+                        idsBooksRented.add(idBook);
+                    } else {
+                        idsBooksRented = new ArrayList<>();
+                        idsBooksRented.add(idBook);
+                    }
+                    students.stream().filter(s -> s.getId().equals(idStudent))
+                            .forEach(s -> {s.setIdsBooksRented(idsBooksRented);
+                            StudentsFile.writeStudent(s);});
+                } else {
+                    System.out.println("No books to rent");
+                }
+            }
+            if (option == 0) {
+                break;
             }
         }
     }
