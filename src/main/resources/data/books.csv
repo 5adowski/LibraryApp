@@ -1,4 +1,5 @@
 Book(id=43d8ef5b-64b4-4827-8bbd-3df79dd2f80f, title=Java, genre=ACTION, releaseDate=1991-02-01, isAvailable=true, idStudent=null)
-Book(id=15d819a2-90e8-473c-9dfd-25b8e05bebe0, title=Titanic, genre=ROMANCE, releaseDate=1111-01-01, isAvailable=true, idStudent=null)
+Book(id=15d819a2-90e8-473c-9dfd-25b8e05bebe0, title=Titanic, genre=ROMANCE, releaseDate=1111-01-01, isAvailable=false, idStudent=fe9ffbb4-8970-46e1-8d1f-8799088f0fb5)
 Book(id=0fa37ed1-ff0d-491f-ac87-50b71b2f619d, title=Spring, genre=ACTION, releaseDate=2000-11-05, isAvailable=true, idStudent=null)
 Book(id=2f5a941b-0c2d-4b52-b0f6-3b1dbbaeadb7, title=Teoria Wszystkiego, genre=ACTION, releaseDate=2022-08-07, isAvailable=true, idStudent=null)
+Book(id=7dbfe4ef-aa5d-493f-a268-94b505ba0a4e, title=Imię róży, genre=ROMANCE, releaseDate=2000-01-01, isAvailable=true, idStudent=null)

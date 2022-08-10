@@ -64,21 +64,21 @@ public class Main {
             }
             if (option == 3) {
                 if(!(BookRepository.getAvaiableBooks(books).isEmpty() || BookRepository.getAvaiableBooks(books)==null)) {
-                    System.out.println(BookRepository.getAvaiableBooks(books));
+                    for(Book b : BookRepository.getAvaiableBooks(books)) System.out.println(b);
                 } else {
                     System.out.println("No available books");
                 }
             }
             if (option == 4) {
-                System.out.println(BookRepository.getBooksSortedByTitle(books));
+                for(Book b : BookRepository.getBooksSortedByTitle(books)) System.out.println(b);
             }
             if (option == 5) {
                 if(!(BookRepository.getAvaiableBooks(books).isEmpty() || BookRepository.getAvaiableBooks(books)==null)) {
-                    System.out.println(BookRepository.getAvaiableBooks(books));
+                    for(Book b : BookRepository.getAvaiableBooks(books)) System.out.println(b);
                     System.out.println("Type ID of book u want to rent:");
                     UUID idBook = UUID.fromString(scan.next());
 
-                    System.out.println(students);
+                    for(Student s : students) System.out.println(s);
                     System.out.println("Type ID of the student who is renting a book:");
                     UUID idStudent = UUID.fromString(scan.next());
 
@@ -91,7 +91,6 @@ public class Main {
                     BooksFile.writeBook(book);
 
                     Student student = students.stream().filter(s -> s.getId().equals(idStudent)).findAny().get();
-                    System.out.println(student);
                     List<UUID> idsBooksRented;
                     if (student.getIdsBooksRented() != null) {
                         idsBooksRented = student.getIdsBooksRented();
@@ -108,18 +107,24 @@ public class Main {
                 }
             }
             if(option == 6) {
-                System.out.println("Type ID of book u want to return:");
-                UUID idBook = UUID.fromString(scan.next());
-
-                Book book = books.stream().filter(b -> b.getId().equals(idBook)).findAny().get();
-                Student student = students.stream().filter(s -> s.getIdsBooksRented().contains(book.getId())).findAny().get();
-                List<UUID> idsBooksRented = student.getIdsBooksRented();
-                idsBooksRented.remove(book.getId());
-                student.setIdsBooksRented(idsBooksRented);
-                StudentsFile.writeStudent(student);
-                book.setAvailable(true);
-                book.setIdStudent(null);
-                BooksFile.writeBook(book);
+                List<UUID> idsBooks = new ArrayList<>();
+                for(Book b : books) if(!b.isAvailable()) idsBooks.add(b.getId());
+                if(!(idsBooks.isEmpty())) {
+                    for(Book b : books.stream().filter(b -> !b.isAvailable()).toList()) System.out.println(b);
+                    System.out.println("Type ID of book u want to return:");
+                    UUID idBook = UUID.fromString(scan.next());
+                    Book book = books.stream().filter(b -> b.getId().equals(idBook)).findAny().get();
+                    Student student = students.stream().filter(s -> s.getIdsBooksRented().contains(book.getId())).findAny().get();
+                    List<UUID> idsBooksRented = student.getIdsBooksRented();
+                    idsBooksRented.remove(book.getId());
+                    student.setIdsBooksRented(idsBooksRented);
+                    StudentsFile.writeStudent(student);
+                    book.setAvailable(true);
+                    book.setIdStudent(null);
+                    BooksFile.writeBook(book);
+                } else {
+                    System.out.println("No books to return");
+                }
             }
             if (option == 0) {
                 break;

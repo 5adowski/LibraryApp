@@ -1,1 +1,2 @@
-Student(id=fe9ffbb4-8970-46e1-8d1f-8799088f0fb5, firstName=Wojciech, lastName=Sadowski, birthDate=1995-11-15, idsBooksRented=[])
+Student(id=fe9ffbb4-8970-46e1-8d1f-8799088f0fb5, firstName=Wojciech, lastName=Sadowski, birthDate=1995-11-15, idsBooksRented=[15d819a2-90e8-473c-9dfd-25b8e05bebe0])
+Student(id=f741bb33-348c-4dcc-b8b7-548da11f45b6, firstName=Karol, lastName=Miller, birthDate=1996-08-20, idsBooksRented=[])
