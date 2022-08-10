@@ -19,9 +19,4 @@ public class Book {
     public Book(){
         this.isAvailable = idStudent == null;
     }
-//
-//    public void setIdStudent(UUID idOfStudent) {
-//        this.idStudent = idOfStudent;
-//        if(idOfStudent != null) this.isAvailable = false;
-//    }
 }

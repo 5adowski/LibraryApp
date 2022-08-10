@@ -1,7 +1,5 @@
 package com.library.file.management;
 
-import com.library.book.Book;
-import com.library.book.genre.Genre;
 import com.library.student.Student;
 
 import java.io.*;
@@ -40,14 +38,17 @@ public class StudentsFile {
 
     public static List<Student> getStudents() {
         List<Student> students = new ArrayList<>();
-        try(BufferedReader reader = Files.newBufferedReader(Path.of(filePath), StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath), StandardCharsets.UTF_8)) {
             String line = reader.readLine();
-            while(line != null) {
+            while (line != null) {
                 String[] attributes = line.split(",");
-                for(int i = 0; i < attributes.length; i++) {
-                    attributes[i] = attributes[i].substring(attributes[i].indexOf("=")+1);
+                for (int i = 0; i < attributes.length; i++) {
+                    attributes[i] = attributes[i].substring(attributes[i].indexOf("=") + 1);
+                    attributes[i] = attributes[i].replace("[", "");
+                    attributes[i] = attributes[i].replace("]", "");
+                    attributes[i] = attributes[i].replace(" ", "");
+                    attributes[i] = attributes[i].replace(")", "");
                 }
-                attributes[attributes.length-1] = attributes[attributes.length-1].replace(")", "");
                 Student student = createStudent(attributes);
                 students.add(student);
                 line = reader.readLine();
@@ -64,11 +65,9 @@ public class StudentsFile {
         String firstName = attributes[1];
         String lastName = attributes[2];
         LocalDate birthDate = LocalDate.parse(attributes[3]);
-        if(!attributes[4].equals("null")) {
+        if (!attributes[4].equals("null") && !attributes[4].equals("")) {
             List<UUID> idsBooksRented = new ArrayList<>();
-            for (int i = 4; i < attributes.length - 1; i++) {
-                idsBooksRented.add(UUID.fromString(attributes[i]));
-            }
+            for (int i = 4; i < attributes.length; i++) idsBooksRented.add(UUID.fromString(attributes[i]));
             student.setIdsBooksRented(idsBooksRented);
         }
         student.setId(id);

@@ -24,7 +24,6 @@ public class Main {
             System.out.println("4. List books by title");
             System.out.println("5. Rent a book");
             System.out.println("6. Return a book");
-            System.out.println("7. Save files");
             System.out.println("0. Close program");
             int option = scan.nextInt();
             if (option == 1) {
@@ -107,6 +106,20 @@ public class Main {
                 } else {
                     System.out.println("No books to rent");
                 }
+            }
+            if(option == 6) {
+                System.out.println("Type ID of book u want to return:");
+                UUID idBook = UUID.fromString(scan.next());
+
+                Book book = books.stream().filter(b -> b.getId().equals(idBook)).findAny().get();
+                Student student = students.stream().filter(s -> s.getIdsBooksRented().contains(book.getId())).findAny().get();
+                List<UUID> idsBooksRented = student.getIdsBooksRented();
+                idsBooksRented.remove(book.getId());
+                student.setIdsBooksRented(idsBooksRented);
+                StudentsFile.writeStudent(student);
+                book.setAvailable(true);
+                book.setIdStudent(null);
+                BooksFile.writeBook(book);
             }
             if (option == 0) {
                 break;
